@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   SERVICE_NAME: cognitive-routing-mcp
-  REGION: us-central1
+  REGION: northamerica-northeast2
   IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/cognitive-routing-mcp
 
 jobs:
