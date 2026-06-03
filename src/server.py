@@ -112,12 +112,17 @@ def health_check() -> dict:
 
 
 def create_app():
-    """Return the ASGI app for uvicorn. Used by Dockerfile CMD and local dev."""
-    return mcp.streamable_http_app()
+    """Return the SSE ASGI app for uvicorn.
+
+    Pega connects via SSE transport:
+      GET  /sse       — Pega opens the SSE stream
+      POST /messages  — Pega sends tool call requests
+    """
+    return mcp.sse_app()
 
 
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8080))
-    logger.info("Starting cognitive-routing-mcp on port %d", port)
+    logger.info("Starting cognitive-routing-mcp (SSE) on port %d", port)
     uvicorn.run(create_app(), host="0.0.0.0", port=port)
