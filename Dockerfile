@@ -11,4 +11,5 @@ ENV PORT=8080
 
 EXPOSE 8080
 
-CMD ["python", "-m", "src.server"]
+# uvicorn serves the ASGI app; $PORT is injected by Cloud Run at runtime
+CMD ["sh", "-c", "uvicorn src.server:create_app --factory --host 0.0.0.0 --port $PORT"]

@@ -111,7 +111,13 @@ def health_check() -> dict:
     return {"status": "ok", "service": "cognitive-routing-mcp"}
 
 
+def create_app():
+    """Return the ASGI app for uvicorn. Used by Dockerfile CMD and local dev."""
+    return mcp.streamable_http_app()
+
+
 if __name__ == "__main__":
+    import uvicorn
     port = int(os.environ.get("PORT", 8080))
     logger.info("Starting cognitive-routing-mcp on port %d", port)
-    mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
+    uvicorn.run(create_app(), host="0.0.0.0", port=port)
