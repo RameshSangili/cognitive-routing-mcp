@@ -15,7 +15,7 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.5-flash-preview-05-20"
 SYSTEM_INSTRUCTION = (
     "You are a loan proposal specialist. "
     "Analyse the loan data and respond in the exact JSON format requested."
