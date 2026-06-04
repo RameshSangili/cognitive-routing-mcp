@@ -21,7 +21,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-mcp = FastMCP("cognitive-routing-mcp")
+_port = int(os.environ.get("PORT", 8080))
+mcp = FastMCP("cognitive-routing-mcp", host="0.0.0.0", port=_port)
 
 
 @mcp.tool()
@@ -123,10 +124,9 @@ def create_app():
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8080))
     tools = mcp._tool_manager.list_tools()
     logger.info(
         "Starting cognitive-routing-mcp (SSE) on port %d — tools: %s",
-        port, [t.name for t in tools],
+        _port, [t.name for t in tools],
     )
-    uvicorn.run(create_app(), host="0.0.0.0", port=port)
+    uvicorn.run(create_app(), host="0.0.0.0", port=_port)
