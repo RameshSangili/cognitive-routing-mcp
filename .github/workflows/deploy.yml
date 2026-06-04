@@ -59,7 +59,7 @@ jobs:
             --min-instances 0 \
             --max-instances 3 \
             --memory 512Mi \
-            --set-env-vars "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }},GOOGLE_AI_API_KEY=${{ secrets.GOOGLE_AI_API_KEY }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" \
+            --set-env-vars "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }},GOOGLE_AI_API_KEY=${{ secrets.GOOGLE_AI_API_KEY }},OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }},ALLOWED_HOSTS=*" \
             --quiet
 
       - name: Show Service URL
