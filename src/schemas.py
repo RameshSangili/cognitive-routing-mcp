@@ -34,15 +34,15 @@ class ExecutionStep(BaseModel):
 
 
 class LoanAnalysis(BaseModel):
-    ComplexityScore: int
-    ComplexityLevel: Literal["LOW", "MEDIUM", "HIGH"]
-    ConfidenceScore: float
-    ApplicationSummary: str
-    DtiCalculation: DtiCalculation
-    Criteria: List[Criterion]
-    Agents: List[Agent]
-    ExecutionOrder: List[ExecutionStep]
-    EscalationRequired: bool
+    ComplexityScore: int = 0
+    ComplexityLevel: Literal["LOW", "MEDIUM", "HIGH"] = "MEDIUM"
+    ConfidenceScore: float = 0.5
+    ApplicationSummary: Optional[str] = ""        # not required — large HTML, stripped before model calls
+    DtiCalculation: Optional[DtiCalculation] = None
+    Criteria: Optional[List[Criterion]] = None
+    Agents: List[Agent] = []
+    ExecutionOrder: List[ExecutionStep] = []
+    EscalationRequired: bool = False
 
     def get_agent(self, name: str) -> Optional[Agent]:
         return next((a for a in self.Agents if a.Name == name), None)
