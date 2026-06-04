@@ -21,8 +21,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+from mcp.server.fastmcp.server import TransportSecuritySettings
+
 _port = int(os.environ.get("PORT", 8080))
-mcp = FastMCP("cognitive-routing-mcp", host="0.0.0.0", port=_port)
+
+# ALLOWED_HOSTS: comma-separated list of hosts that may connect (set via env var).
+# Defaults to permissive wildcard for Cloud Run — override in prod if needed.
+_raw_hosts = os.environ.get("ALLOWED_HOSTS", "*")
+_allowed_hosts = [h.strip() for h in _raw_hosts.split(",")] if _raw_hosts != "*" else []
+
+mcp = FastMCP(
+    "cognitive-routing-mcp",
+    host="0.0.0.0",
+    port=_port,
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=False if _raw_hosts == "*" else True,
+        allowed_hosts=_allowed_hosts,
+        allowed_origins=[],  # Pega is server-side Java — no Origin header
+    ),
+)
 
 
 @mcp.tool()
