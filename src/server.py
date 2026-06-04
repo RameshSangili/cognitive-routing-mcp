@@ -124,5 +124,9 @@ def create_app():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8080))
-    logger.info("Starting cognitive-routing-mcp (SSE) on port %d", port)
+    tools = mcp._tool_manager.list_tools()
+    logger.info(
+        "Starting cognitive-routing-mcp (SSE) on port %d — tools: %s",
+        port, [t.name for t in tools],
+    )
     uvicorn.run(create_app(), host="0.0.0.0", port=port)
