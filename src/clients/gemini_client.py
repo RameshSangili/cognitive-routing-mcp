@@ -4,7 +4,8 @@ import json
 import logging
 import os
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 from src.schemas import AgentResult, LoanAnalysis
@@ -31,18 +32,20 @@ def analyze_with_gemini(analysis: LoanAnalysis, prompt: str) -> AgentResult:
     if not api_key:
         raise ValueError("GOOGLE_AI_API_KEY environment variable is not set")
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(
-        model_name=GEMINI_MODEL,
-        system_instruction=SYSTEM_INSTRUCTION,
-        generation_config={"max_output_tokens": 512},
-    )
+    client = genai.Client(api_key=api_key)
 
     slim_json = _slim_context(analysis)
     full_prompt = f"Loan data:\n{slim_json}\n\nTask: {prompt}\n\n{STRUCTURED_OUTPUT_INSTRUCTION}"
 
     logger.info("Gemini call: model=%s", GEMINI_MODEL)
-    response = model.generate_content(full_prompt)
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=full_prompt,
+        config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_INSTRUCTION,
+            max_output_tokens=512,
+        ),
+    )
 
-    raw = response.text if hasattr(response, "text") else str(response)
+    raw = response.text or ""
     return parse_agent_output(raw, "ProposalAgent", GEMINI_MODEL, analysis.ComplexityLevel)
